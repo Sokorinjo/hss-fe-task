@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { type Post } from '../lib/types'
 import { usePostsStore } from '../app/store'
 import DeleteSelectedPosts from './DeleteSelectedPosts'
-import { PostsContext } from '../context/postsContext'
 
 type Props = {
   filteredPosts: Post[],
