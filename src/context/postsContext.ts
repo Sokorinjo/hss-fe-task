@@ -1,5 +1,15 @@
 import { createContext, Provider } from "react";
 import { type Post } from "../lib/types";
 
-export const PostsContext = createContext<Post | undefined>(undefined)
+type PostContextType={
+  filteredPosts: Post[],
+  setFilteredPosts: React.Dispatch<React.SetStateAction<Post[]>>
+}
+
+// type ProviderProps = {
+//   children: React.ReactNode
+// }
+
+export const PostsContext = createContext<PostContextType | undefined>(undefined)
+
 

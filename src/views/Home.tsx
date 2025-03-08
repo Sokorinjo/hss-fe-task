@@ -1,14 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
-import { Post } from '../lib/types.ts'
-import ShowPostsTable from '../components/Table.tsx'
-import ShowFormButton from '../components/ShowFormButton.tsx'
 import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { type Post } from '../lib/types.ts'
+import ShowPostsTable from '../components/Table.tsx'
+import NewItemForm from '../components/NewItemForm.tsx'
+import { PostsContext } from '../context/postsContext.ts'
 
 export default function Home() {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([])
-  
+
   //Fetch posts from URL
-  const { data, isLoading, isError, isSuccess} = useQuery({
+  const {isLoading, isError, isSuccess} = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
       const response = await fetch('http://jsonplaceholder.typicode.com/posts')
@@ -30,9 +31,12 @@ export default function Home() {
     return (
     <>
         <h1 className=''>Home</h1>
+        <p></p>
         <div>
-          <ShowFormButton />
-          <ShowPostsTable filteredPosts={filteredPosts}/>
+          <PostsContext.Provider value={{filteredPosts, setFilteredPosts}}>
+            <NewItemForm filteredPosts={filteredPosts} setFilteredPosts={setFilteredPosts}/>
+            <ShowPostsTable filteredPosts={filteredPosts} setFilteredPosts={setFilteredPosts}/>
+          </PostsContext.Provider>
         </div>
       </>
     )
