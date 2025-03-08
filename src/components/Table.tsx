@@ -9,6 +9,10 @@ type Props = {
   setFilteredPosts: React.Dispatch<React.SetStateAction<Post[]>>
 }
 
+const searchInputClass = {
+  style: " w-full bg-amber-50 h-8 placeholder:text-gray-400 text-gray-900 rounded-sm pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600"
+}
+
 const ShowPostsTable = ({ filteredPosts, setFilteredPosts }: Props) => {
   const [search, setSearch] = useState("")
   const [ascending, setAscending] = useState(true)
@@ -41,7 +45,7 @@ const ShowPostsTable = ({ filteredPosts, setFilteredPosts }: Props) => {
 
   //Sort table
   function sortTable() {
-    setFilteredPosts(prev => [...prev].sort((a: Post, b: Post) => 
+    setFilteredPosts(prev => [...prev].sort((a: Post, b: Post) =>
       ascending ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
     ))
     setAscending(!ascending)
@@ -50,21 +54,29 @@ const ShowPostsTable = ({ filteredPosts, setFilteredPosts }: Props) => {
   return (
     <>
       <div className=' rounded-xl w-4xl'>
+        <div className='flex mb-1 '>
+          <input type="text" 
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder='Search Title' 
+          name='search' className={searchInputClass.style} />
+        </div>
         <table className='rounded-lg w-full'>
           <thead className=' h-10 bg-blue-500'>
             <tr className=''>
               <th className=''>Id</th>
-              <th onClick={sortTable} className='hover:bg-blue-700'>Title {ascending ? "z-a" : "a-z" }</th>
+              <th onClick={sortTable} className='hover:bg-blue-700'>Title {ascending ? "z-a" : "a-z"}</th>
               <th>Body</th>
               <th></th>
             </tr>
           </thead>
           <tbody className='backgrop-blur-xs bg-amber-50 text-black '>
-            {filteredPosts.map((post: Post) =>
+            {filteredPosts.filter((searchPost)=> {
+              return search.toLocaleLowerCase() === "" ? searchPost : searchPost.title.toLocaleLowerCase().includes(search)
+            }).map((post: Post) =>
               <tr key={post.id} className='border-b-1 border-b-black h-16'>
                 <td className='pl-5 pr-5 font-bold'>{post.id}</td>
                 <td onClick={sortTable}>{post.title.slice(0, 10)}</td>
-                <td>{post.body.slice(0,50)}...</td>
+                <td>{post.body.slice(0, 50)}...</td>
                 <td>
                   <input type="checkbox" id={post.id.toString()} className='ml-5 mr-5 size-5 ' onChange={(e) => onCheckChange(e)} />
                 </td>
