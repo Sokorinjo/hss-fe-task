@@ -55,7 +55,7 @@ export default function NewItemForm({ filteredPosts, setFilteredPosts }: Props) 
   }
 
   return (
-    <div className='flex flex-col items-start '>
+    <div className='flex flex-col items-start'>
       <div>
         <button 
         onClick={handleShowForm} 
