@@ -1,32 +1,25 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { type Post } from '../lib/types.ts'
 import ShowPostsTable from '../components/Table.tsx'
 import NewItemForm from '../components/NewItemForm.tsx'
+import { usePostsQuery } from '../features/postsQuery.ts'
 
 export default function Home() {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([])
-
-  //Fetch posts from URL
-  const { isLoading, isError, isSuccess } = useQuery({
-    queryKey: ['posts'],
-    queryFn: async () => {
-      const response = await fetch('http://jsonplaceholder.typicode.com/posts')
-      const data = await response.json()
-      const filteredPosts = data.filter((post: Post) => {
-        return post.userId === 1
-      })
-      setFilteredPosts(filteredPosts)
-      return filteredPosts
+  
+  const{data, isLoading, isError, isSuccess} = usePostsQuery()
+  useEffect(() => {
+    if(data){
+      setFilteredPosts(data)
     }
-  })
+  }, [data])
 
   //Check if loading
   if (isLoading) return <div>Loading...</div>
-
+  
   //Check if error occured
   if (isError) return <div>Error has occured</div>
-
+  
   if (isSuccess) {
     return (
       <>
@@ -41,15 +34,19 @@ export default function Home() {
       </>
     )
   }
-
 }
+//Fetch posts from URL
+//const { isLoading, isError, isSuccess } = useQuery({
+//   queryKey: ['posts'],
+//   queryFn: async () => {
+//     const response = await fetch('http://jsonplaceholder.typicode.com/posts')
+//     const data = await response.json()
+//     const filteredPosts = data.filter((post: Post) => {
+//       return post.userId === 1
+//     })
+//     setFilteredPosts(filteredPosts)
+//     return filteredPosts
+//   }
+//})
 
-// const getPosts = async () => {
-//   const response = await fetch('http://jsonplaceholder.typicode.com/posts')
-//   const data = await response.json()
-//   const filteredPosts = data.filter((post: Post) => {
-//     return post.userId === 1
-//   }) 
-//   return filteredPosts
-// }
 
